@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CDN DE CSS PARA EL GRAFICO Y BOOTSTRAP   agregar-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" rel="stylesheet" type="text/css">
-
+    <!-- ESTILOS NECESARIOS agregar-->
     <style>
         html, body {
             width: 100%;
@@ -31,6 +32,7 @@
     <title>Trading Demo</title>
 </head>
 <body>
+    <!-- DIV QUE CONTIENE TODO EL DEMO  agregar-->
     <div class="container" style="background-color:#000000;">
         <div class="row">
             <div class="col text-center">
@@ -129,7 +131,7 @@
         </div>
     </div>
     
-    <!-- Modal -->
+    <!-- MODAL agregar-->
     <div class="modal fade" id="customModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -151,16 +153,16 @@
     </div>
     
     
-        
+     <!-- CDN DE JS PARA EL GRAFICO, BOOTSRAP Y JQUERY  agregar-->   
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  
+    
+    <!-- JAVASCRIPT DEL DEMO agregar-->
     <script type="text/javascript">
         var btnCompra = document.getElementById("btn-compra");
         var btnVenta = document.getElementById("btn-venta");
@@ -171,7 +173,9 @@
         var itr, txtWinOrLose, multiValue = 1, investValue = 1;
         var dropMulti = document.getElementById("btnGroupMulti");
         var dropInvest = document.getElementById("btnGroupPrecio");
-
+        
+        //ARRAY PARA LOS VALORES DEL GRAFICO
+        //el codigo los lee de arriba para abajo(El de hasta abajo es el que se modifica su valor)
         var stockPrices= [
                 [Date.UTC(2022, 05, 12, 08, 00, 00), 176.179993, 177.360001, 175.649994, 177.089996],
                 [Date.UTC(2022, 05, 12, 08, 01, 00), 177.899994, 179.389999, 176.139999, 176.190002],
@@ -234,7 +238,7 @@
                 [Date.UTC(2022, 05, 12, 08, 58, 00), 169.880005, 173.089996, 169.850006, 170.050003],
                 [Date.UTC(2022, 05, 12, 08, 59, 00), 173, 174, 171.529999, 173.25],
                 [Date.UTC(2022, 05, 12, 09, 00, 00), 172.229996, 173.919998, 171.699997, 173.440002],]
-                
+
         var lastCandle = stockPrices[stockPrices.length - 1];
         var candleDate = lastCandle[0]
         var initPrice = lastCandle[1];
@@ -245,12 +249,14 @@
         //btnVenta desactivado hasta que inicie la compra
         btnVenta.disabled = true;
 
+        //FUNCION QUE CAMBIA EL MULTIPLICADOR
         function changeMultiplier(value){            
             dropMulti.textContent = "MULTIPLICADOR";
             multiValue = value;
             dropMulti.innerHTML = dropMulti.textContent + "  x" + multiValue ;
         }
         
+        //FUNCION QUE CAMBIA CANTIDAD DE ACCIONES
         function changeInvestment(value){
             dropInvest.textContent = "CANTIDAD DE ACCIONES";
             investValue = value;
@@ -258,7 +264,7 @@
         }
         
         btnCompra.onclick = function() {
-            console.log(lastCandle);
+            //console.log(lastCandle);
             i=1;
             btnVenta.disabled = false;
             btnCompra.disabled = true;
@@ -278,14 +284,14 @@
                     //console.log("SUBEEEEE      " + finalPrice)
                     if (finalPrice > highestPrice){
                         highestPrice = finalPrice;
-                        console.log("el precio mayor cambio     " + highestPrice)
+                        //console.log("el precio mayor cambio     " + highestPrice)
                     }                    
                 } else {
                     finalPrice = finalPrice - (number * 0.75);
                     //console.log("BAJAAAAA    " + finalPrice)
                     if (finalPrice < lowestPrice){
                         lowestPrice = finalPrice;
-                        console.log("el precio menor cambio     " + lowestPrice)
+                        //console.log("el precio menor cambio     " + lowestPrice)
                     }
                 }
                 //REFRESH DATA EN GRAFICO Y TXT'S
@@ -297,7 +303,7 @@
                 //AQUI ELEGIR CUANTAS VECES HARA EL CAMBIO DE PRECIO
                 if(i === (stockPrices.length)){
                     clearInterval(itr);
-                    console.log(updateCandle);
+                    //console.log(updateCandle);
                 }
                 i++;
             }, 1500);  
@@ -305,11 +311,13 @@
 
         btnVenta.onclick = function() {
             clearInterval(itr)
-            console.log(txtGanPL.textContent)             
+            //console.log(txtGanPL.textContent)             
             if(initPrice < finalPrice){
+                //Texto para modal si tiene ganancias
                 txtWinOrLose ="!Felicidades!, has ganado "+"<span id='precioGanador' class='valor'>   $"+txtGanPL.textContent +"</span>"+ ". Únete ahora a Trading Low Cost y genera ingresos extras apalancándote de nuestras estrategias!"
                 $("#customModal").find(".modal-header").css("background-color","#22AE48");
             }else{
+                //Texto para modal si tiene perdidas
                 txtWinOrLose ="¡Ups! Perdiste "+"<span id='precioPerdedor'>   $"+txtGanPL.textContent +"</span>"+ ". Únete ahora a Trading Low Cost y aprende a generar ingresos extra de forma segura y rentable."
                 $("#customModal").find(".modal-header").css("background-color","#D82828");
             }
@@ -320,6 +328,7 @@
             $('#customModal').modal('show');                        
         }
         
+        //JAVASCRIPT DEL GRAFICO
         anychart.onDocumentReady(function() {
             // set the data
             table = anychart.data.table();            
