@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" rel="stylesheet" type="text/css">
+
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #graph-container{
+            height: 800px;            
+        }
+
+        #precioGanador{
+            color: green;
+            font-weight: bold;
+        }
+        #precioPerdedor{
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+    <title>Trading Demo</title>
+</head>
+<body>
+    <div class="container" style="background-color:#000000;">
+        <div class="row">
+            <div class="col text-center">
+                <h1 class="text-white">Plataforma Demo TLC</h1>                
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col text-center">
+                <h5 class="text-white">Simula una operación, ¡Intenta vender lo más caro que puedas!</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div id="graph-container"></div>
+            </div>
+        </div>
+
+        <div class="row pl-5 pr-5">
+            <div class="col p-1">
+                <div class="input-group d-flex flex-column">
+                    <div class="input-group-prepend d-flex justify-content-center">
+                      <span class="input-group-text text-white border-0 " style="background-color:#000000; outline: none;" id="basic-addon2">PRECIO DE COMPRA </span>
+                    </div>
+                    <span type="text" id="txtInitialStockPrice" class="text-white border-0 text-center"  style="background-color:#000000; outline: none;"></span>
+                </div>
+            </div>
+
+            <div class="col p-1">
+                <div class="input-group d-flex flex-column">
+                    <div class="input-group-prepend d-flex justify-content-center">
+                      <span class="input-group-text text-white border-0" style="background-color:#0000; outline: none;" id="basic-addon2">PRECIO ACTUAL </span>
+                    </div>
+                    <span type="text" id="txtStockPrice" class="text-white border-0 text-center"  style="background-color:#0000; outline: none;"></span>
+                </div>
+            </div>
+
+            <div class="col p-1">
+                <div class="input-group d-flex flex-column">
+                    <div class="input-group-prepend d-flex justify-content-center">
+                      <span class="input-group-text text-white border-0" style="background-color:#000000;" id="basic-addon2">GANANCIA ACTUAL(P/L)</span>
+                    </div>
+                    <span type="text" id="txtGanPL"class="text-white border-0 text-center"  style="background-color:#000000;"></span>
+                </div>
+            </div>
+
+            <div class="col p-1">
+                <div class="input-group d-flex flex-column" >
+                    <div class="input-group-prepend d-flex justify-content-center">
+                      <span class="input-group-text text-white border-0" id="basic-addon3" style="background-color:#000000;">GANANCIA ACTUAL %</span>
+                    </div>
+                    <span type="text" id="txtGanPor"class="text-white border-0 text-center" style="background-color:#000000;"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row pl-5 pr-5 pb-2">
+            
+            <div class="col p-1">
+                <button type="button" id="btn-compra" class="btn  btn-success h-100 w-100 font-weight-bold">COMPRA</button>
+            </div>
+
+            <div class="col p-1">
+                <button type="button" id="btn-venta" class="btn btn-danger h-100 w-100 font-weight-bold" >VENTA</button><!-- data-toggle="modal" data-target="#customModal" -->
+            </div>
+
+            <div class="col p-1">
+                <div class="btn-group h-100 w-100" role="group">
+                    <button id="btnGroupMulti" type="button" class="btn btn-secondary dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      MULTIPLICADOR
+                    </button>
+                    <div class="dropdown-menu border-0" style="background-color:#232323; opacity:0.9" aria-labelledby="btnGroupMulti">
+                      <button class="dropdown-item text-white" onclick=changeMultiplier(1) type="button">x 1</button>
+                      <button class="dropdown-item text-white" onclick=changeMultiplier(2) type="button">x 2</button>
+                      <button class="dropdown-item text-white" onclick=changeMultiplier(5) type="button">x 5</button>
+                      <button class="dropdown-item text-white" onclick=changeMultiplier(10) type="button">x 10</button>
+                    </div>
+                </div>                        
+            </div>
+
+            <div class="col p-1">
+                <div class="btn-group h-100 w-100" role="group">  
+                    <button id="btnGroupPrecio" type="button" class="btn btn-secondary dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        CANTIDAD DE ACCIONES
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" style="background-color:#232323; opacity:0.9" aria-labelledby="btnGroupPrecio">
+                      <button class="dropdown-item text-white" onclick=changeInvestment(1) type="button">1</button>
+                      <button class="dropdown-item text-white" onclick=changeInvestment(2) type="button">2</button>
+                      <button class="dropdown-item text-white" onclick=changeInvestment(3) type="button">3</button>
+                      <button class="dropdown-item text-white" onclick=changeInvestment(4) type="button">4</button>
+                      <button class="dropdown-item text-white" onclick=changeInvestment(5) type="button">5</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="customModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title text-justify" id="customModalLabel"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body text-justify">
+           
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="botonCerrar" data-dismiss="modal">Continuar</button>
+            <a class="btn btn-primary" id="botonLink" href="https://tradinglowcost.com/paquetes/" role="button">Continuar</a>
+            </div>
+        </div>
+        </div>
+    </div>
+    
+    
+        
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  
+    <script type="text/javascript">
+        var btnCompra = document.getElementById("btn-compra");
+        var btnVenta = document.getElementById("btn-venta");
+        var txtStockPrice = document.getElementById("txtStockPrice");
+        var txtGanPL = document.getElementById("txtGanPL");
+        var txtGanPor = document.getElementById("txtGanPor");
+        var customModal = document.getElementById("customModal");
+        var itr, txtWinOrLose, multiValue = 1, investValue = 1;
+        var dropMulti = document.getElementById("btnGroupMulti");
+        var dropInvest = document.getElementById("btnGroupPrecio");
+
+        var stockPrices= [
+                [Date.UTC(2022, 05, 12, 08, 00, 00), 176.179993, 177.360001, 175.649994, 177.089996],
+                [Date.UTC(2022, 05, 12, 08, 01, 00), 177.899994, 179.389999, 176.139999, 176.190002],
+                [Date.UTC(2022, 05, 12, 08, 02, 00), 176.149994, 179.25, 175.070007, 179.100006],
+                [Date.UTC(2022, 05, 12, 08, 03, 00), 179.369995, 180.100006, 178.25, 179.259995],
+                [Date.UTC(2022, 05, 12, 08, 04, 00), 178.610001, 179.580002, 177.410004, 178.460007],
+                [Date.UTC(2022, 05, 12, 08, 05, 00), 177.300003, 177.779999, 176.600006, 177],
+                [Date.UTC(2022, 05, 12, 08, 06, 00), 177.300003, 179.440002, 176.820007, 177.039993],
+                [Date.UTC(2022, 05, 12, 08, 07, 00), 177.25, 177.300003, 173.199997, 174.220001],
+                [Date.UTC(2022, 05, 12, 08, 08, 00), 174.509995, 174.949997, 170.529999, 171.110001],
+                [Date.UTC(2022, 05, 12, 08, 09, 00), 172, 172, 170.059998, 171.509995],
+                [Date.UTC(2022, 05, 12, 08, 10, 00), 170.160004, 170.160004, 167.070007, 167.960007],
+                [Date.UTC(2022, 05, 12, 08, 11, 00), 165.529999, 167.369995, 164.699997, 166.970001],
+                [Date.UTC(2022, 05, 12, 08, 12, 00), 166.869995, 168.440002, 166.5, 167.429993],
+                [Date.UTC(2022, 05, 12, 08, 13, 00), 167.169998, 168.619995, 166.759995, 167.779999],
+                [Date.UTC(2022, 05, 12, 08, 14, 00), 166, 166.800003, 160.100006, 160.5],
+                [Date.UTC(2022, 05, 12, 08, 15, 00), 159.100006, 163.880005, 156, 156.490005],
+                [Date.UTC(2022, 05, 12, 08, 16, 00), 154.830002, 163.720001, 154, 163.029999],
+                [Date.UTC(2022, 05, 12, 08, 17, 00), 163.089996, 163.399994, 159.070007, 159.539993],
+                [Date.UTC(2022, 05, 12, 08, 18, 00), 160.289993, 161, 155.029999, 155.149994],
+                [Date.UTC(2022, 05, 12, 08, 19, 00), 157.070007, 157.889999, 150.240005, 156.410004],
+                [Date.UTC(2022, 05, 12, 08, 20, 00), 158.5, 163.889999, 157.509995, 162.710007],
+                [Date.UTC(2022, 05, 12, 08, 21, 00), 161.949997, 164.75, 161.649994, 164.339996],
+                [Date.UTC(2022, 05, 12, 08, 22, 00), 163.039993, 167.539993, 162.880005, 167.369995],
+                [Date.UTC(2022, 05, 12, 08, 23, 00), 169.789993, 173.089996, 169, 172.990005],
+                [Date.UTC(2022, 05, 12, 08, 24, 00), 172.360001, 174.820007, 171.770004, 172.429993],
+                [Date.UTC(2022, 05, 12, 08, 25, 00), 172.050003, 174.259995, 171.419998, 171.850006],
+                [Date.UTC(2022, 05, 12, 08, 26, 00), 172.830002, 174.119995, 171.009995, 171.070007],
+                [Date.UTC(2022, 05, 12, 08, 27, 00), 171.800003, 173.949997, 171.710007, 172.5],
+                [Date.UTC(2022, 05, 12, 08, 28, 00), 173.669998, 175.649994, 173.539993, 175.5],
+                [Date.UTC(2022, 05, 12, 08, 29, 00), 176.350006, 179.389999, 176.210007, 178.970001],
+                [Date.UTC(2022, 05, 12, 08, 30, 00), 179.100006, 180.479996, 178.160004, 178.389999],
+                [Date.UTC(2022, 05, 12, 08, 31, 00), 179.259995, 180.619995, 178.050003, 178.119995],
+                [Date.UTC(2022, 05, 12, 08, 32, 00), 178.539993, 179.779999, 172.660004, 175],
+                [Date.UTC(2022, 05, 12, 08, 33, 00), 172.800003, 176.300003, 172.449997, 176.210007],
+                [Date.UTC(2022, 05, 12, 08, 34, 00), 175.210007, 177.740005, 174.520004, 176.820007],
+                [Date.UTC(2022, 05, 12, 08, 35, 00), 177.910004, 178.25, 176.130005, 176.669998],
+                [Date.UTC(2022, 05, 12, 08, 36, 00), 174.940002, 175.850006, 174.270004, 175.029999],
+                [Date.UTC(2022, 05, 12, 08, 37, 00), 175.479996, 177.119995, 175.070007, 176.940002],
+                [Date.UTC(2022, 05, 12, 08, 38, 00), 177.960007, 180, 177.389999, 179.979996],
+                [Date.UTC(2022, 05, 12, 08, 39, 00), 180.289993, 182.389999, 180.210007, 181.720001],
+                [Date.UTC(2022, 05, 12, 08, 40, 00), 182.589996, 183.5, 179.240005, 179.970001],
+                [Date.UTC(2022, 05, 12, 08, 41, 00), 180.320007, 180.520004, 177.809998, 178.440002],
+                [Date.UTC(2022, 05, 12, 08, 42, 00), 178.5, 180.240005, 178.070007, 178.649994],
+                [Date.UTC(2022, 05, 12, 08, 43, 00), 178.649994, 179.119995, 177.619995, 178.020004],
+                [Date.UTC(2022, 05, 12, 08, 44, 00), 177.320007, 177.470001, 173.660004, 175.300003],
+                [Date.UTC(2022, 05, 12, 08, 45, 00), 175.240005, 176.800003, 174.940002, 175.240005],
+                [Date.UTC(2022, 05, 12, 08, 46, 00), 175.039993, 175.089996, 171.259995, 171.270004],
+                [Date.UTC(2022, 05, 12, 08, 47, 00), 170, 172.679993, 168.600006, 168.850006],
+                [Date.UTC(2022, 05, 12, 08, 48, 00), 168.389999, 169.919998, 164.940002, 164.940002],
+                [Date.UTC(2022, 05, 12, 08, 49, 00), 168.070007, 173.100006, 166.440002, 172.770004],
+                [Date.UTC(2022, 05, 12, 08, 50, 00), 173.679993, 175.149994, 166.919998, 168.339996],
+                [Date.UTC(2022, 05, 12, 08, 51, 00), 167.25, 170.020004, 165.190002, 166.479996],
+                [Date.UTC(2022, 05, 12, 08, 52, 00), 167.809998, 171.75, 166.899994, 167.779999],
+                [Date.UTC(2022, 05, 12, 08, 53, 00), 166.639999, 168.940002, 164.470001, 166.679993],
+                [Date.UTC(2022, 05, 12, 08, 54, 00), 167.639999, 168.75, 164.880005, 168.389999],
+                [Date.UTC(2022, 05, 12, 08, 55, 00), 164.880005, 172.009995, 164.770004, 171.610001],
+                [Date.UTC(2022, 05, 12, 08, 56, 00), 172.580002, 174.229996, 172.080002, 172.800003],
+                [Date.UTC(2022, 05, 12, 08, 57, 00), 170.970001, 172.479996, 168.199997, 168.380005],
+                [Date.UTC(2022, 05, 12, 08, 58, 00), 169.880005, 173.089996, 169.850006, 170.050003],
+                [Date.UTC(2022, 05, 12, 08, 59, 00), 173, 174, 171.529999, 173.25],
+                [Date.UTC(2022, 05, 12, 09, 00, 00), 172.229996, 173.919998, 171.699997, 173.440002],]
+                
+        var lastCandle = stockPrices[stockPrices.length - 1];
+        var candleDate = lastCandle[0]
+        var initPrice = lastCandle[1];
+        var highestPrice = lastCandle[2];
+        var lowestPrice = lastCandle[3];
+        var finalPrice = lastCandle[4];
+
+        //btnVenta desactivado hasta que inicie la compra
+        btnVenta.disabled = true;
+
+        function changeMultiplier(value){            
+            dropMulti.textContent = "MULTIPLICADOR";
+            multiValue = value;
+            dropMulti.innerHTML = dropMulti.textContent + "  x" + multiValue ;
+        }
+        
+        function changeInvestment(value){
+            dropInvest.textContent = "CANTIDAD DE ACCIONES";
+            investValue = value;
+            dropInvest.innerHTML = dropInvest.textContent + " " + investValue ;
+        }
+        
+        btnCompra.onclick = function() {
+            console.log(lastCandle);
+            i=1;
+            btnVenta.disabled = false;
+            btnCompra.disabled = true;
+            dropMulti.disabled = true;
+            dropInvest.disabled = true;
+            //LLENADO DE MODAL
+            $("#customModal").find(".modal-title").text("Inicio de Operación");
+            $("#customModal").find(".modal-body").text("Has tomado una posición a la alza, si el precio sube habrás ganado, ¡Éxito!");
+            $('#customModal').modal('show');
+            $('#botonLink').hide();
+            txtInitialStockPrice.textContent = "$ " + initPrice.toFixed(2);            
+            //INICIO CAMBIO DE PRECIO
+            itr = setInterval(() => {
+                let number = Math.random();
+                if (number < 0.70) {
+                    finalPrice = finalPrice + (number * 1.35);
+                    //console.log("SUBEEEEE      " + finalPrice)
+                    if (finalPrice > highestPrice){
+                        highestPrice = finalPrice;
+                        console.log("el precio mayor cambio     " + highestPrice)
+                    }                    
+                } else {
+                    finalPrice = finalPrice - (number * 0.75);
+                    //console.log("BAJAAAAA    " + finalPrice)
+                    if (finalPrice < lowestPrice){
+                        lowestPrice = finalPrice;
+                        console.log("el precio menor cambio     " + lowestPrice)
+                    }
+                }
+                //REFRESH DATA EN GRAFICO Y TXT'S
+                var updateCandle = [[candleDate,initPrice,highestPrice,lowestPrice,finalPrice]];
+                table.addData(updateCandle);
+                txtStockPrice.textContent = "$ " + finalPrice.toFixed(2);
+                txtGanPL.textContent = (((finalPrice - initPrice)*multiValue)*investValue).toFixed(2)+ " dolares";
+                txtGanPor.textContent = (((((finalPrice - initPrice)*multiValue)*investValue)/initPrice)*100).toFixed(2)+" %";
+                //AQUI ELEGIR CUANTAS VECES HARA EL CAMBIO DE PRECIO
+                if(i === (stockPrices.length)){
+                    clearInterval(itr);
+                    console.log(updateCandle);
+                }
+                i++;
+            }, 1500);  
+        }
+
+        btnVenta.onclick = function() {
+            clearInterval(itr)
+            console.log(txtGanPL.textContent)             
+            if(initPrice < finalPrice){
+                txtWinOrLose ="!Felicidades!, has ganado "+"<span id='precioGanador' class='valor'>   $"+txtGanPL.textContent +"</span>"+ ". Únete ahora a Trading Low Cost y genera ingresos extras apalancándote de nuestras estrategias!"
+                $("#customModal").find(".modal-header").css("background-color","#22AE48");
+            }else{
+                txtWinOrLose ="¡Ups! Perdiste "+"<span id='precioPerdedor'>   $"+txtGanPL.textContent +"</span>"+ ". Únete ahora a Trading Low Cost y aprende a generar ingresos extra de forma segura y rentable."
+                $("#customModal").find(".modal-header").css("background-color","#D82828");
+            }
+            $("#customModal").find(".modal-title").text("Cierre de Operación");            
+            $("#customModal").find(".modal-body").html(txtWinOrLose);
+            $('#botonLink').show();
+            $('#botonCerrar').hide();
+            $('#customModal').modal('show');                        
+        }
+        
+        anychart.onDocumentReady(function() {
+            // set the data
+            table = anychart.data.table();            
+            table.addData(stockPrices);
+
+            // map the data
+            var mapping = table.mapAs();
+            mapping.addField('open', 1);
+            mapping.addField('high', 2);
+            mapping.addField('low', 3);
+            mapping.addField('close', 4);
+
+            // chart type
+            var chart = anychart.stock();
+
+            // set the series
+            var series = chart.plot(0).candlestick(mapping);
+            series.name("Apple Inc. (AAPL)");
+            
+            // set the container id
+            chart.container("graph-container");
+            
+            // set the custom colors for Globex series
+            series.risingStroke("#22AE48");
+            series.risingFill("#22AE48");
+            series.fallingStroke("#D82828");
+            series.fallingFill("#D82828");
+            
+            // bg
+            chart.background().fill("#000000");
+
+            // initiate drawing the chart
+            chart.draw();
+        });
+
+    </script>
+</body>
+</html>
